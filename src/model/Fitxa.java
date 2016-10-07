@@ -28,7 +28,7 @@ public class Fitxa {
 
     @Override
     public String toString() {
-        return "Fitxa{" + num1 + " | " + num2 + '}';
+        return "{" + num1 + " | " + num2 + '}';
     }
     
 }

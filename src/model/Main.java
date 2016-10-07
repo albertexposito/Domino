@@ -26,11 +26,24 @@ public class Main {
         System.out.println("");
         joc.llistaJugadors[1].MostraFitxes();
         System.out.println("");
-
         joc.llistaJugadors[2].MostraFitxes();
         System.out.println("");
-
         joc.llistaJugadors[3].MostraFitxes();
+        System.out.println("");
+        
+        joc.comprovarSisDoble();
+        
+        joc.iniciarJoc();
+        
+        System.out.println("");
+        joc.llistaJugadors[0].MostraFitxes();
+        System.out.println("");
+        joc.llistaJugadors[1].MostraFitxes();
+        System.out.println("");
+        joc.llistaJugadors[2].MostraFitxes();
+        System.out.println("");
+        joc.llistaJugadors[3].MostraFitxes();
+        
 
     }
 

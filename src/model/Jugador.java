@@ -21,9 +21,13 @@ public class Jugador {
         fitxesJugador = new ArrayList<Fitxa>();
     }
 
+    public ArrayList<Fitxa> getFitxesJugador() {
+        return fitxesJugador;
+    }
+
     public void MostraFitxes() {
         System.out.println("Jugador " + nom + ", té " + fitxesJugador.size() + " fitxes.");
-        for (int j = 0; j < 7; j++) {
+        for (int j = 0; j < fitxesJugador.size(); j++) {
             System.out.println("Fitxa numero " + j + "-> " + fitxesJugador.get(j) + " | ");
         }
     }

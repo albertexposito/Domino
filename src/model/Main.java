@@ -22,13 +22,13 @@ public class Main {
         joc.crearFitxes();
         joc.repartirFitxes();
 
-        joc.llistaJugadors[0].MostraFitxes();
+        joc.llistaJugadors[0].mostraFitxes();
         System.out.println("");
-        joc.llistaJugadors[1].MostraFitxes();
+        joc.llistaJugadors[1].mostraFitxes();
         System.out.println("");
-        joc.llistaJugadors[2].MostraFitxes();
+        joc.llistaJugadors[2].mostraFitxes();
         System.out.println("");
-        joc.llistaJugadors[3].MostraFitxes();
+        joc.llistaJugadors[3].mostraFitxes();
         System.out.println("");
         
         joc.comprovarSisDoble();
@@ -36,13 +36,13 @@ public class Main {
         joc.iniciarJoc();
         
         System.out.println("");
-        joc.llistaJugadors[0].MostraFitxes();
+        joc.llistaJugadors[0].mostraFitxes();
         System.out.println("");
-        joc.llistaJugadors[1].MostraFitxes();
+        joc.llistaJugadors[1].mostraFitxes();
         System.out.println("");
-        joc.llistaJugadors[2].MostraFitxes();
+        joc.llistaJugadors[2].mostraFitxes();
         System.out.println("");
-        joc.llistaJugadors[3].MostraFitxes();
+        joc.llistaJugadors[3].mostraFitxes();
         
 
     }

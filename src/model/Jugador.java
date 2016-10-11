@@ -25,7 +25,7 @@ public class Jugador {
         return fitxesJugador;
     }
 
-    public void MostraFitxes() {
+    public void mostraFitxes() {
         System.out.println("Jugador " + nom + ", té " + fitxesJugador.size() + " fitxes.");
         for (int j = 0; j < fitxesJugador.size(); j++) {
             System.out.println("Fitxa numero " + j + "-> " + fitxesJugador.get(j) + " | ");

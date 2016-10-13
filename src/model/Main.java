@@ -1,5 +1,7 @@
 package model;
 
+import model.Joc;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -31,9 +33,7 @@ public class Main {
         joc.llistaJugadors[3].mostraFitxes();
         System.out.println("");
         
-        joc.comprovarSisDoble();
-        
-        joc.iniciarJoc();
+        System.out.println("Es el torn de: " + joc.primeraFitxa());
         
         System.out.println("");
         joc.llistaJugadors[0].mostraFitxes();

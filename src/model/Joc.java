@@ -5,6 +5,9 @@
  */
 package model;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+
 /**
  *
  * @author ALUMNEDAM
@@ -12,16 +15,13 @@ package model;
 public class Joc {
 
     Jugador[] llistaJugadors;
-    Fitxa[] fitxesRepartir = new Fitxa[28];
-    Jugada jug = new Jugada();
-    
-    String tauler;
-    int NumL = 6;
-    int numR = 6;
-    int passades = 0;
-    int torn;
-    
-    boolean finalitzar = false;
+    private Deque<Fitxa> fitxesTauler = new ArrayDeque<Fitxa>(28);
+    private Fitxa[] fitxesRepartir = new Fitxa[28];
+
+    static int passades = 0;
+    private int torn;
+
+    private boolean finalitzar = false;
 
     public Jugador[] getLlistaJugadors() {
         return llistaJugadors;
@@ -74,30 +74,30 @@ public class Joc {
 
         }
     }
-
-    public void comprovarSisDoble() {
-        int jugInici = 0;
+    
+    public int primeraFitxa() {
+        int primer = 0, fitxa = 0;
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 7; j++) {
                 if (llistaJugadors[i].getFitxesJugador().get(j).getNum1() == 6
                         && llistaJugadors[i].getFitxesJugador().get(j).getNum2() == 6) {
-                        jugInici = i;
-                        break;
+                    primer = i;
+                    fitxa = j;
+                    System.out.println("primer = "+primer+" fitxa = "+ fitxa);
+                    break;
                 }
             }
         }
-        torn = jugInici;
-        System.out.println("El jugador que comença es: " + llistaJugadors[jugInici].nom);
-        
+        fitxesTauler.addFirst(llistaJugadors[primer].getFitxesJugador().get(fitxa));
+        llistaJugadors[primer].getFitxesJugador().remove(fitxa);
+        return (primer+1);
     }
     
-    public void iniciarJoc(){
-        jug.primeraFitxa(llistaJugadors, torn, tauler);
-        
-        while(!finalitzar){
+//    public int estatJoc(){
+//        
+//    }
             
-        }
-    }
+    
 
 }

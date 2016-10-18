@@ -101,7 +101,7 @@ public class Joc {
                 if (comptarPuntuacioFitxes(i) > comptarPuntuacioFitxes(guanyador)) {
                     guanyador = i;
                 } else if (comptarPuntuacioFitxes(i) == comptarPuntuacioFitxes(guanyador)
-                        && llistaJugadors[i].fitxesJugador.size() > llistaJugadors[guanyador].fitxesJugador.size()) {
+                        && llistaJugadors[i].fitxesJugador.size() < llistaJugadors[guanyador].fitxesJugador.size()) {
                     guanyador = i;
                 }
             }

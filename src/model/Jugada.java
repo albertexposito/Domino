@@ -13,76 +13,77 @@ import java.util.Deque;
  */
 public class Jugada {
 
-    int torn;
-    Jugador[] jugador;
-    boolean tiradaPossible = false;
+    private int torn;
+    private Jugador[] jugador;
 
     public Jugada(int torn, Jugador[] jugador) {
         this.torn = torn;
         this.jugador = jugador;
     }
 
-    
-    public boolean esPotContinuar(Deque<Fitxa> fitxesTauler) {
-        boolean cont = true;
-        for (int i = 0; i < jugador[torn].fitxesJugador.size(); i++) {
-            if (jugador[torn].fitxesJugador.get(i).getNum1() == fitxesTauler.getFirst().num1
-                    || jugador[torn].fitxesJugador.get(i).getNum2() == fitxesTauler.getFirst().num1
-                    || jugador[torn].fitxesJugador.get(i).getNum1() == fitxesTauler.getLast().num2
-                    || jugador[torn].fitxesJugador.get(i).getNum2() == fitxesTauler.getLast().num2) {
-                System.out.println("Es pot continuar");
-                break;
+    public byte determinarTipusFitxa(Deque<Fitxa> fitxesTauler, int i) {
+        byte cont = 0;
+        if (jugador[torn].fitxesJugador.get(i).getNum1() == fitxesTauler.getFirst().num1
+                || jugador[torn].fitxesJugador.get(i).getNum2() == fitxesTauler.getFirst().num1
+                || jugador[torn].fitxesJugador.get(i).getNum1() == fitxesTauler.getLast().num2
+                || jugador[torn].fitxesJugador.get(i).getNum2() == fitxesTauler.getLast().num2) {
+
+            if (jugador[torn].fitxesJugador.get(i).getNum1() == jugador[torn].fitxesJugador.get(i).getNum2()) {
+                cont = 2;
             } else {
-                cont = false;
-                System.out.println("No es pot continuar");
+                cont = 1;
             }
+        } else {
+            cont = 0;
+            System.out.println("No es pot continuar");
         }
         return cont;
     }
-    
-    
-    public boolean[] possibleFitxa(Deque<Fitxa> fitxesTauler) {
-        boolean[] possibles = new boolean[jugador[torn].fitxesJugador.size()];
+
+    public byte[] possibleFitxa(Deque<Fitxa> fitxesTauler) {
+        byte[] possibles = new byte[jugador[torn].fitxesJugador.size()];
         for (int i = 0; i < possibles.length; i++) {
-            if (jugador[torn].fitxesJugador.get(i).getNum1() == fitxesTauler.getFirst().num1
-                    || jugador[torn].fitxesJugador.get(i).getNum2() == fitxesTauler.getFirst().num1
-                    || jugador[torn].fitxesJugador.get(i).getNum1() == fitxesTauler.getLast().num2
-                    || jugador[torn].fitxesJugador.get(i).getNum2() == fitxesTauler.getLast().num2) {
-                possibles[i] = true;
-                tiradaPossible = true;
-                
-            }
+            possibles[i] = determinarTipusFitxa(fitxesTauler, i);
+
         }
         return possibles;
     }
 
     //CAMBIAR TIRADA POSSIBLE
     public void colocarFitxa(Deque<Fitxa> fitxesTauler, int posicio, boolean[] possibles) {
+
         if (tiradaPossible == true) {
             Joc.passades = 0;
             if (possibles[posicio] == true) {
+
+                //
                 if ((jugador[torn].fitxesJugador.get(posicio).getNum1() == fitxesTauler.getFirst().num1)
                         || (jugador[torn].fitxesJugador.get(posicio).getNum2() == fitxesTauler.getLast().num2)) {
+
                     rotarFitxa(jugador[torn].fitxesJugador.get(posicio));
                     posicioEspecifica(fitxesTauler, posicio);
                 } else if ((jugador[torn].fitxesJugador.get(posicio).getNum1() == fitxesTauler.getLast().num2)
                         || (jugador[torn].fitxesJugador.get(posicio).getNum2() == fitxesTauler.getFirst().num1)) {
+
                     posicioEspecifica(fitxesTauler, posicio);
                 } else if (jugador[torn].fitxesJugador.get(posicio).getNum2() == fitxesTauler.getFirst().num1) {
+
                     fitxesTauler.addFirst(jugador[torn].fitxesJugador.get(posicio));
                     jugador[torn].fitxesJugador.remove(posicio);
                 } else if (jugador[torn].fitxesJugador.get(posicio).getNum1() == fitxesTauler.getLast().num2) {
+
                     fitxesTauler.addLast(jugador[torn].fitxesJugador.get(posicio));
                     jugador[torn].fitxesJugador.remove(posicio);
                 } else if (jugador[torn].fitxesJugador.get(posicio).getNum1() == fitxesTauler.getFirst().num1) {
+
                     rotarFitxa(jugador[torn].fitxesJugador.get(posicio));
                     fitxesTauler.addFirst(jugador[torn].fitxesJugador.get(posicio));
                     jugador[torn].fitxesJugador.remove(posicio);
                 } else if (jugador[torn].fitxesJugador.get(posicio).getNum2() == fitxesTauler.getLast().num2) {
+
                     rotarFitxa(jugador[torn].fitxesJugador.get(posicio));
                     fitxesTauler.addLast(jugador[torn].fitxesJugador.get(posicio));
                     jugador[torn].fitxesJugador.remove(posicio);
-                    
                 }
             }
         } else {
@@ -104,6 +105,22 @@ public class Jugada {
         } else if (posFitxa == 'R') {
             fitxesTauler.addLast(jugador[torn].fitxesJugador.get(posicio));
             jugador[torn].fitxesJugador.remove(posicio);
+        }
+    }
+
+    public void colocarDobles(byte[] possibles, Deque<Fitxa> fitxesTauler) {
+        int fitxa1 = -1;
+        int fitxa2 = -1;
+
+        for (int i = 0; i < possibles.length; i++) {
+            if (possibles[i] == 2 && fitxa1 == -1) {
+                fitxa1 = i;
+            } else if (possibles[i] == 2 && fitxa1 != -1) {
+                fitxa2 = i;
+            }
+        }
+        if (fitxa1 != -1 && fitxa2 != -1) {
+            if (jugador[torn].fitxesJugador.get(fitxa1).getNum2() == fitxesTauler )
         }
     }
 

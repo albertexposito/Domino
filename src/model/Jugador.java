@@ -13,7 +13,7 @@ import java.util.ArrayList;
  */
 public class Jugador {
 
-    String nom;
+    private String nom;
     ArrayList<Fitxa> fitxesJugador;
 
     public Jugador(String nom) {

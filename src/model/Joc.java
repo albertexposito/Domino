@@ -74,7 +74,7 @@ public class Joc {
 
         }
     }
-    
+
     public int primeraFitxa() {
         int primer = 0, fitxa = 0;
 
@@ -84,20 +84,38 @@ public class Joc {
                         && llistaJugadors[i].getFitxesJugador().get(j).getNum2() == 6) {
                     primer = i;
                     fitxa = j;
-                    System.out.println("primer = "+primer+" fitxa = "+ fitxa);
+                    System.out.println("primer = " + primer + " fitxa = " + fitxa);
                     break;
                 }
             }
         }
         fitxesTauler.addFirst(llistaJugadors[primer].getFitxesJugador().get(fitxa));
         llistaJugadors[primer].getFitxesJugador().remove(fitxa);
-        return (primer+1);
+        return (primer + 1);
     }
-    
-//    public int estatJoc(){
-//        
-//    }
-            
-    
+
+    public int estatJoc() {
+        int guanyador = 0;
+        if (passades == 4) {
+            for (int i = 1; i < 4; i++) {
+                if (comptarPuntuacioFitxes(i) > comptarPuntuacioFitxes(guanyador)) {
+                    guanyador = i;
+                } else if (comptarPuntuacioFitxes(i) == comptarPuntuacioFitxes(guanyador)
+                        && llistaJugadors[i].fitxesJugador.size() > llistaJugadors[guanyador].fitxesJugador.size()) {
+                    guanyador = i;
+                }
+            }
+        }
+        return guanyador;
+    }
+
+    public int comptarPuntuacioFitxes(int i) {
+        int puntuacio = 0;
+        for (int j = 0; j < llistaJugadors[i].fitxesJugador.size(); j++) {
+            puntuacio += llistaJugadors[i].fitxesJugador.get(j).getNum1();
+            puntuacio += llistaJugadors[i].fitxesJugador.get(j).getNum2();
+        }
+        return puntuacio;
+    }
 
 }

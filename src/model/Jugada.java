@@ -22,6 +22,7 @@ public class Jugada {
         this.jugador = jugador;
     }
 
+    
     public boolean esPotContinuar(Deque<Fitxa> fitxesTauler) {
         boolean cont = true;
         for (int i = 0; i < jugador[torn].fitxesJugador.size(); i++) {

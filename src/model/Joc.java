@@ -95,7 +95,7 @@ public class Joc {
     }
 
     public int estatJoc() {
-        int guanyador = 0;
+        int guanyador = -1;
         if (passades == 4) {
             for (int i = 1; i < 4; i++) {
                 if (comptarPuntuacioFitxes(i) > comptarPuntuacioFitxes(guanyador)) {
@@ -103,6 +103,13 @@ public class Joc {
                 } else if (comptarPuntuacioFitxes(i) == comptarPuntuacioFitxes(guanyador)
                         && llistaJugadors[i].fitxesJugador.size() < llistaJugadors[guanyador].fitxesJugador.size()) {
                     guanyador = i;
+                }
+            }
+        } else {
+            for (int i = 0; i < llistaJugadors.length; i++) {
+                if(llistaJugadors[i].fitxesJugador.size() == 0){
+                    guanyador = i;
+                    break;
                 }
             }
         }

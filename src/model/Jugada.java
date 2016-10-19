@@ -29,7 +29,7 @@ public class Jugada {
         }
         return possibles;
     }
-    
+
     public void realitzarJugada(byte[] possibles, Deque<Fitxa> fitxesTauler, int posicio) {
         boolean fitxaUnica = false;
         byte contDobles = 0;
@@ -44,12 +44,14 @@ public class Jugada {
                 }
             }
         }
-        if (contDobles == 2){
+        if (contDobles == 2) {
             colocarDobles(possibles, fitxesTauler);
+            Joc.passades = 0;
         } else if (fitxaUnica == false) {
             Joc.passades++;
         } else {
             colocarFitxa(fitxesTauler, posicio);
+            Joc.passades = 0;
         }
     }
 
@@ -71,8 +73,6 @@ public class Jugada {
         }
         return cont;
     }
-
-    
 
     //CAMBIAR TIRADA POSSIBLE
     public void colocarFitxa(Deque<Fitxa> fitxesTauler, int posicio) {

@@ -8,29 +8,38 @@ package model;
 import java.util.Deque;
 
 /**
- *
+ * 
  * @author ALUMNEDAM
  */
 public class Jugada {
 
-    private int torn;
-    private Jugador[] jugador;
+    private Joc joc;
 
-    public Jugada(int torn, Jugador[] jugador) {
-        this.torn = torn;
-        this.jugador = jugador;
+    public Jugada() {
+        this.joc = joc;
     }
 
-    public byte[] possibleFitxa(Deque<Fitxa> fitxesTauler) {
-        byte[] possibles = new byte[jugador[torn].fitxesJugador.size()];
+    /**
+     * Calcula els tipus de fitxa que té un jugador
+     * 0 = la fitxa no es pot colocar, 1 = la fitxa es pot colocar, 2 = la fitxa es doble
+     * @return un array de bytes amb els tipus de fitxes que té el jugador.
+     */
+    public byte[] possibleFitxa() {
+        byte[] possibles = new byte[joc.llistaJugadors[joc.torn].fitxesJugador.size()];
         for (int i = 0; i < possibles.length; i++) {
-            possibles[i] = determinarTipusFitxa(fitxesTauler, i);
+            possibles[i] = determinarTipusFitxa(i);
 
         }
         return possibles;
     }
 
-    public void realitzarJugada(byte[] possibles, Deque<Fitxa> fitxesTauler, int posicio) {
+    /**
+     * Realitza una tirada, li passem l'array amb les possibles tirades, i comprova
+     * si pot colocar fitxes dobles, o si no té tirada possible, si no demana una
+     * posició per a una fitxa i la posicio del tauler on es colocara.
+     * @param possibles
+     */
+    public void realitzarTirada(byte[] possibles) {
         boolean fitxaUnica = false;
         byte contDobles = 0;
 
@@ -45,88 +54,101 @@ public class Jugada {
             }
         }
         if (contDobles == 2) {
-            colocarDobles(possibles, fitxesTauler);
-            Joc.passades = 0;
+            colocarDobles(possibles);
+            joc.passades = 0;
         } else if (fitxaUnica == false) {
-            Joc.passades++;
+            joc.passades++;
         } else {
-            colocarFitxa(fitxesTauler, posicio);
-            Joc.passades = 0;
+            int posicio = 0;
+            char posicioTauler = 'L';
+            colocarFitxa(posicio,posicioTauler);
+            joc.passades = 0;
         }
     }
 
-    public byte determinarTipusFitxa(Deque<Fitxa> fitxesTauler, int i) {
+    /**
+     * Determina el tipus de fitxa d'un jugador,
+     * 0 = no colocable, 1 = colocable, 2 = colocable i doble
+     * @param i index de la fitxa
+     * @return 
+     */
+    public byte determinarTipusFitxa(int i) {
         byte cont = 0;
-        if (jugador[torn].fitxesJugador.get(i).getNum1() == fitxesTauler.getFirst().num1
-                || jugador[torn].fitxesJugador.get(i).getNum2() == fitxesTauler.getFirst().num1
-                || jugador[torn].fitxesJugador.get(i).getNum1() == fitxesTauler.getLast().num2
-                || jugador[torn].fitxesJugador.get(i).getNum2() == fitxesTauler.getLast().num2) {
+        if (joc.llistaJugadors[joc.getTorn()].fitxesJugador.get(i).getNum1() == joc.fitxesTauler.getFirst().num1
+                || joc.llistaJugadors[joc.torn].fitxesJugador.get(i).getNum2() == joc.fitxesTauler.getFirst().num1
+                || joc.llistaJugadors[joc.torn].fitxesJugador.get(i).getNum1() == joc.fitxesTauler.getLast().num2
+                || joc.llistaJugadors[joc.torn].fitxesJugador.get(i).getNum2() == joc.fitxesTauler.getLast().num2) {
 
-            if (jugador[torn].fitxesJugador.get(i).getNum1() == jugador[torn].fitxesJugador.get(i).getNum2()) {
+            if (joc.llistaJugadors[joc.torn].fitxesJugador.get(i).getNum1() == joc.llistaJugadors[joc.torn].fitxesJugador.get(i).getNum2()) {
                 cont = 2;
             } else {
                 cont = 1;
             }
         } else {
             cont = 0;
-            System.out.println("No es pot continuar");
         }
         return cont;
     }
 
     //CAMBIAR TIRADA POSSIBLE
-    public void colocarFitxa(Deque<Fitxa> fitxesTauler, int posicio) {
-
-        //
-        if ((jugador[torn].fitxesJugador.get(posicio).getNum1() == fitxesTauler.getFirst().num1)
-                || (jugador[torn].fitxesJugador.get(posicio).getNum2() == fitxesTauler.getLast().num2)) {
-
-            rotarFitxa(jugador[torn].fitxesJugador.get(posicio));
-            posicioEspecifica(fitxesTauler, posicio);
-        } else if ((jugador[torn].fitxesJugador.get(posicio).getNum1() == fitxesTauler.getLast().num2)
-                || (jugador[torn].fitxesJugador.get(posicio).getNum2() == fitxesTauler.getFirst().num1)) {
-
-            posicioEspecifica(fitxesTauler, posicio);
-        } else if (jugador[torn].fitxesJugador.get(posicio).getNum2() == fitxesTauler.getFirst().num1) {
-
-            fitxesTauler.addFirst(jugador[torn].fitxesJugador.get(posicio));
-            jugador[torn].fitxesJugador.remove(posicio);
-        } else if (jugador[torn].fitxesJugador.get(posicio).getNum1() == fitxesTauler.getLast().num2) {
-
-            fitxesTauler.addLast(jugador[torn].fitxesJugador.get(posicio));
-            jugador[torn].fitxesJugador.remove(posicio);
-        } else if (jugador[torn].fitxesJugador.get(posicio).getNum1() == fitxesTauler.getFirst().num1) {
-
-            rotarFitxa(jugador[torn].fitxesJugador.get(posicio));
-            fitxesTauler.addFirst(jugador[torn].fitxesJugador.get(posicio));
-            jugador[torn].fitxesJugador.remove(posicio);
-        } else if (jugador[torn].fitxesJugador.get(posicio).getNum2() == fitxesTauler.getLast().num2) {
-
-            rotarFitxa(jugador[torn].fitxesJugador.get(posicio));
-            fitxesTauler.addLast(jugador[torn].fitxesJugador.get(posicio));
-            jugador[torn].fitxesJugador.remove(posicio);
+    /**
+     * Escull una fitxa per colocarla a la posicio desitjada del tauler
+     * @param posicio 
+     * @param posicioTauler char amb els valors L (left) o R (right) per
+     * colocar a l'esquerra o a la dreta la fitxa desitjada.
+     */
+    public void colocarFitxa(int posicio, char posicioTauler) {
+        if (posicioTauler == 'L') {
+            joc.fitxesTauler.addFirst(joc.llistaJugadors[joc.torn].fitxesJugador.get(posicio));
+            joc.llistaJugadors[joc.torn].fitxesJugador.remove(posicio);
+        } else if (posicioTauler == 'R') {
+            joc.fitxesTauler.addLast(joc.llistaJugadors[joc.torn].fitxesJugador.get(posicio));
+            joc.llistaJugadors[joc.torn].fitxesJugador.remove(posicio);
         }
 
     }
 
+    /**
+     * Se li pasa una posicio i calcula tots els casos possibles per introduir aquesta.
+     * @param posicio int amb la posicio de la fitxa a la llista dels jugadors.
+     */
+    public void colocarFitxaIA(int posicio) {
+        if (joc.llistaJugadors[joc.torn].fitxesJugador.get(posicio).getNum2() == joc.fitxesTauler.getFirst().num1) {
+
+            joc.fitxesTauler.addFirst(joc.llistaJugadors[joc.torn].fitxesJugador.get(posicio));
+            joc.llistaJugadors[joc.torn].fitxesJugador.remove(posicio);
+        } else if (joc.llistaJugadors[joc.torn].fitxesJugador.get(posicio).getNum1() == joc.fitxesTauler.getLast().num2) {
+
+            joc.fitxesTauler.addLast(joc.llistaJugadors[joc.torn].fitxesJugador.get(posicio));
+            joc.llistaJugadors[joc.torn].fitxesJugador.remove(posicio);
+        } else if (joc.llistaJugadors[joc.torn].fitxesJugador.get(posicio).getNum1() == joc.fitxesTauler.getFirst().num1) {
+
+            rotarFitxa(joc.llistaJugadors[joc.torn].fitxesJugador.get(posicio));
+            joc.fitxesTauler.addFirst(joc.llistaJugadors[joc.torn].fitxesJugador.get(posicio));
+            joc.llistaJugadors[joc.torn].fitxesJugador.remove(posicio);
+        } else if (joc.llistaJugadors[joc.torn].fitxesJugador.get(posicio).getNum2() == joc.fitxesTauler.getLast().num2) {
+
+            rotarFitxa(joc.llistaJugadors[joc.torn].fitxesJugador.get(posicio));
+            joc.fitxesTauler.addLast(joc.llistaJugadors[joc.torn].fitxesJugador.get(posicio));
+            joc.llistaJugadors[joc.torn].fitxesJugador.remove(posicio);
+        }
+
+    }
+    /**
+     * "Rota" la fitxa en cas de que estigui amb la orientacio equivocada
+     * @param fitxa fitxa del jugador
+     */
     public void rotarFitxa(Fitxa fitxa) {
         int aux = fitxa.getNum2();
         fitxa.setNum2(fitxa.getNum1());
         fitxa.setNum1(aux);
     }
 
-    public void posicioEspecifica(Deque<Fitxa> fitxesTauler, int posicio) {
-        char posFitxa = 'L';
-        if (posFitxa == 'L') {
-            fitxesTauler.addFirst(jugador[torn].fitxesJugador.get(posicio));
-            jugador[torn].fitxesJugador.remove(posicio);
-        } else if (posFitxa == 'R') {
-            fitxesTauler.addLast(jugador[torn].fitxesJugador.get(posicio));
-            jugador[torn].fitxesJugador.remove(posicio);
-        }
-    }
-
-    public void colocarDobles(byte[] possibles, Deque<Fitxa> fitxesTauler) {
+    /**
+     * Coloca dos dobles en cas de que el jguador els tingui.
+     * @param possibles array amb el tipus de fitxa qu té el jugador.
+     */
+    public void colocarDobles(byte[] possibles) {
         int fitxa1 = -1;
         int fitxa2 = -1;
 
@@ -138,18 +160,18 @@ public class Jugada {
             }
         }
         if (fitxa1 != -1 && fitxa2 != -1) {
-            if (jugador[torn].fitxesJugador.get(fitxa1).getNum2()
-                    == fitxesTauler.getFirst().getNum1()) {
-                fitxesTauler.addFirst(jugador[torn].fitxesJugador.get(fitxa1));
-                fitxesTauler.addLast(jugador[torn].fitxesJugador.get(fitxa2));
-                jugador[torn].fitxesJugador.remove(fitxa1);
-                jugador[torn].fitxesJugador.remove(fitxa2);
+            if (joc.llistaJugadors[joc.torn].fitxesJugador.get(fitxa1).getNum2()
+                    == joc.fitxesTauler.getFirst().getNum1()) {
+                joc.fitxesTauler.addFirst(joc.llistaJugadors[joc.torn].fitxesJugador.get(fitxa1));
+                joc.fitxesTauler.addLast(joc.llistaJugadors[joc.torn].fitxesJugador.get(fitxa2));
+                joc.llistaJugadors[joc.torn].fitxesJugador.remove(fitxa1);
+                joc.llistaJugadors[joc.torn].fitxesJugador.remove(fitxa2);
 
             } else {
-                fitxesTauler.addFirst(jugador[torn].fitxesJugador.get(fitxa2));
-                fitxesTauler.addLast(jugador[torn].fitxesJugador.get(fitxa1));
-                jugador[torn].fitxesJugador.remove(fitxa1);
-                jugador[torn].fitxesJugador.remove(fitxa2);
+                joc.fitxesTauler.addFirst(joc.llistaJugadors[joc.torn].fitxesJugador.get(fitxa2));
+                joc.fitxesTauler.addLast(joc.llistaJugadors[joc.torn].fitxesJugador.get(fitxa1));
+                joc.llistaJugadors[joc.torn].fitxesJugador.remove(fitxa1);
+                joc.llistaJugadors[joc.torn].fitxesJugador.remove(fitxa2);
             }
         }
     }

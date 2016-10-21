@@ -15,11 +15,11 @@ import java.util.Deque;
 public class Joc {
 
     Jugador[] llistaJugadors;
-    private Deque<Fitxa> fitxesTauler = new ArrayDeque<Fitxa>(28);
+    Deque<Fitxa> fitxesTauler = new ArrayDeque<Fitxa>(28);
     private Fitxa[] fitxesRepartir = new Fitxa[28];
 
-    static int passades = 0;
-    private int torn;
+    int passades = 0;
+    int torn;
 
     private boolean finalitzar = false;
 
@@ -27,6 +27,15 @@ public class Joc {
         return llistaJugadors;
     }
 
+    public int getTorn() {
+        return torn;
+    }
+
+    
+    
+    /**
+     * Crea els 4 Jugadors de la partida, passem un nom per a cada jugador.
+     */
     public void crearJugadors() {
         llistaJugadors = new Jugador[4];
         llistaJugadors[0] = new Jugador("Paco Pepe");
@@ -36,6 +45,9 @@ public class Joc {
 
     }
 
+    /**
+     * Creem les 28 fitxes del joc
+     */
     public void crearFitxes() {
         int pos = 0;
         for (int i = 0; i < 7; i++) {
@@ -46,6 +58,9 @@ public class Joc {
         }
     }
 
+    /**
+     * Reparteix aleatoriament les 28 fitxes, 7 a cada jugador
+     */
     public void repartirFitxes() {
 
         boolean[] escollides = new boolean[28];
@@ -75,6 +90,12 @@ public class Joc {
         }
     }
 
+    /**
+     * Cerca quin jugador te la primera fitxa, es a dir el sis doble {6 | 6} i
+     * la coloca.
+     *
+     * @return int amb la posicio del jugador que li toca.
+     */
     public int primeraFitxa() {
         int primer = 0, fitxa = 0;
 
@@ -94,29 +115,40 @@ public class Joc {
         return (primer + 1);
     }
 
+    /**
+     * Comproba l'estat del joc, que pot acabar perque un jugador coloqui totes
+     * les fitxes o perque els jugadors no puguin colocar cap fitxa, en el segon
+     * cas calcularem qui té menys punts i en cas d'empat, menys fitxes.
+     *
+     * @return int amb valor = -1 en cas de que el joc continuï, o amb la
+     * posicio del guanyador en cas de que el joc hagi acabat.
+     */
     public int estatJoc() {
         int guanyador = -1;
         if (passades == 4) {
             for (int i = 1; i < 4; i++) {
-                if (comptarPuntuacioFitxes(i) > comptarPuntuacioFitxes(guanyador)) {
+                if (comptarPuntuacioTotesFitxes(i) < comptarPuntuacioTotesFitxes(guanyador)) {
                     guanyador = i;
-                } else if (comptarPuntuacioFitxes(i) == comptarPuntuacioFitxes(guanyador)
+                } else if (comptarPuntuacioTotesFitxes(i) == comptarPuntuacioTotesFitxes(guanyador)
                         && llistaJugadors[i].fitxesJugador.size() < llistaJugadors[guanyador].fitxesJugador.size()) {
                     guanyador = i;
                 }
             }
+        } else if (llistaJugadors[torn].fitxesJugador.size() == 0) {
+
+            guanyador = torn;
+
         } else {
-            for (int i = 0; i < llistaJugadors.length; i++) {
-                if(llistaJugadors[i].fitxesJugador.size() == 0){
-                    guanyador = i;
-                    break;
-                }
-            }
+            torn = (++torn) % 4;
         }
         return guanyador;
     }
-
-    public int comptarPuntuacioFitxes(int i) {
+    /**
+     * Compta la puntuació de les fitxes d'un jugador
+     * @param i index del jugador
+     * @return int amb la puntuacio d'un jugador.
+     */
+    public int comptarPuntuacioTotesFitxes(int i) {
         int puntuacio = 0;
         for (int j = 0; j < llistaJugadors[i].fitxesJugador.size(); j++) {
             puntuacio += llistaJugadors[i].fitxesJugador.get(j).getNum1();
